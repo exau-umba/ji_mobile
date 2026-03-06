@@ -1,138 +1,166 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-/// Dashboard principal de l’app mobile.
-/// Visuel inspiré de la maquette rouge (carte de compte + tuiles de services).
-class DashboardScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../../core/theme/app_theme.dart';
+import '../../../../core/theme/app_design.dart';
+
+/// Page d'accueil : uniquement le banner (slides) + BottomNavigationBar avec Font Awesome.
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  final PageController _bannerController = PageController();
+  int _currentBannerIndex = 0;
+  Timer? _bannerTimer;
+
+  /// Chemins des images du banner (slides). Remplacer par vos assets ou URLs.
+  static const List<String> _bannerSlides = [
+    'assets/images/Gemini_Generated_Image_2y4cno2y4cno2y4c.png',
+    'assets/images/Gemini_Generated_Image_chewkfchewkfchew.png',
+    'assets/images/Gemini_Generated_Image_dov5l5dov5l5dov5.png',
+    'assets/images/Gemini_Generated_Image_lhhuw5lhhuw5lhhu.png',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _bannerTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (!mounted) return;
+      final next = (_currentBannerIndex + 1) % _bannerSlides.length;
+      _bannerController.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _bannerTimer?.cancel();
+    _bannerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: false,
+        titleSpacing: 0,
+        title: const Text('Journées Informatiques', style: TextStyle(color: jiPrimary, fontWeight: FontWeight.w600, fontSize: kFontSizeTitleMedium)),
+        leading: Padding(
+          padding: const EdgeInsets.all(kSpaceS),
+          child: Image.asset(
+            'assets/icon/JI_MINI_LOGO.png',
+            height: kLogoHeightAppBar,
+            fit: BoxFit.contain,
+          ),
+        ),
+        leadingWidth: kLogoHeightAppBar + (kSpaceS * 2),
+        actions: [
+          IconButton(onPressed: () {}, icon: const Badge(label: Text('5'), child: Icon(FontAwesomeIcons.bell, color: jiPrimary, size: kIconSizeMedium,)),),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Bandeau haut type "carte" avec stats principales
-            Container(
-              margin: const EdgeInsets.all(16),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                gradient: const LinearGradient(
-                  colors: [Color(0xFFB31217), Color(0xFFE52D27)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Bonjour,',
-                    style: TextStyle(color: Colors.white70),
+            // Banner : slides (carousel) 16/9
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final width = constraints.maxWidth - (kScreenPaddingHorizontal * 2);
+                final height = width * 5 / 9 ;
+                return SizedBox(
+                  height: height,
+                  child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  PageView.builder(
+                    controller: _bannerController,
+                    onPageChanged: (index) => setState(() => _currentBannerIndex = index),
+                    itemCount: _bannerSlides.length,
+                    physics: const BouncingScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: AppInsets.horizontal,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(kRadiusL),
+                          child: Image.asset(
+                            _bannerSlides[index],
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            errorBuilder: (_, __, ___) => Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [jiPrimary, jiPrimaryLight],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                              child: const Center(
+                                child: Icon(Icons.image_not_supported_outlined, color: Colors.white54, size: 48),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Participant JI 2026',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Vos inscriptions',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Formations: 0  ·  Projets: 0  ·  Badge: 0',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: kSpaceM),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        _bannerSlides.length,
+                        (index) => AnimatedContainer(
+                          duration: const Duration(milliseconds: kDurationShort),
+                          margin: const EdgeInsets.symmetric(horizontal: kSpaceXS),
+                          height: kIndicatorSize,
+                          width: _currentBannerIndex == index ? kIndicatorSizeActive : kIndicatorSize,
+                          decoration: BoxDecoration(
+                            color: _currentBannerIndex == index
+                                ? Colors.white
+                                : Colors.white.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
+                );
+              },
             ),
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Actions rapides',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Expanded(
-                        child: GridView.count(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 12,
-                          crossAxisSpacing: 12,
-                          children: const [
-                            _DashboardTile(
-                              icon: Icons.event_available_outlined,
-                              label: 'Programme',
-                            ),
-                            _DashboardTile(
-                              icon: Icons.school_outlined,
-                              label: 'Formations',
-                            ),
-                            _DashboardTile(
-                              icon: Icons.lightbulb_outline,
-                              label: 'Appel à projets',
-                            ),
-                            _DashboardTile(
-                              icon: Icons.badge_outlined,
-                              label: 'Mes badges',
-                            ),
-                            _DashboardTile(
-                              icon: Icons.chat_bubble_outline,
-                              label: 'Annonces',
-                            ),
-                            _DashboardTile(
-                              icon: Icons.person_outline,
-                              label: 'Profil',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            // Contenu vide en dessous (plus de cartes ni grille)
+            const Expanded(child: SizedBox.shrink()),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        onTap: (_) {},
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
+            icon: FaIcon(FontAwesomeIcons.house, size: 20),
             label: 'Accueil',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.event_note_outlined),
+            icon: FaIcon(FontAwesomeIcons.calendarDays, size: 20),
             label: 'Agenda',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
+            icon: FaIcon(FontAwesomeIcons.user, size: 20),
             label: 'Profil',
           ),
         ],
@@ -140,46 +168,3 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 }
-
-class _DashboardTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const _DashboardTile({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F7FB),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE6F0FF),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(
-              icon,
-              color: const Color(0xFF0066FF),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
