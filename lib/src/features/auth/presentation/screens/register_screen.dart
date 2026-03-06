@@ -31,8 +31,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
     {'value': 'sponsor', 'label': 'Sponsor'},
   ];
 
+  /// Pattern email simple et courant (local@domain).
+  static final _regEmail = RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController.addListener(_onEmailOrPasswordChanged);
+    _passwordController.addListener(_onEmailOrPasswordChanged);
+    _confirmPasswordController.addListener(_onEmailOrPasswordChanged);
+  }
+
   @override
   void dispose() {
+    _emailController.removeListener(_onEmailOrPasswordChanged);
+    _passwordController.removeListener(_onEmailOrPasswordChanged);
+    _confirmPasswordController.removeListener(_onEmailOrPasswordChanged);
     _firstNameController.dispose();
     _lastNameController.dispose();
     _emailController.dispose();
@@ -40,6 +56,131 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _onEmailOrPasswordChanged() => setState(() {});
+
+  bool _isEmailValid(String email) => email.isNotEmpty && _regEmail.hasMatch(email.trim());
+
+  /// Règles : 8 car. min, 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial.
+  static final _regUpper = RegExp(r'[A-Z]');
+  static final _regLower = RegExp(r'[a-z]');
+  static final _regDigit = RegExp(r'[0-9]');
+  static final _regSpecial = RegExp(r'[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\;/`~]');
+
+  _PasswordStrength _passwordStrength(String password) {
+    if (password.isEmpty) {
+      return _PasswordStrength(label: '', progress: 0, color: Colors.grey);
+    }
+    final hasMinLen = password.length >= 8;
+    final hasUpper = _regUpper.hasMatch(password);
+    final hasLower = _regLower.hasMatch(password);
+    final hasDigit = _regDigit.hasMatch(password);
+    final hasSpecial = _regSpecial.hasMatch(password);
+    final count = [hasMinLen, hasUpper, hasLower, hasDigit, hasSpecial].where((e) => e).length;
+    if (count <= 2) return _PasswordStrength(label: 'Faible', progress: count / 5, color: Colors.red.shade700);
+    if (count <= 4) return _PasswordStrength(label: 'Moyen', progress: count / 5, color: Colors.orange.shade700);
+    return _PasswordStrength(label: 'Fort', progress: 1.0, color: Colors.green.shade700);
+  }
+
+  Widget _buildPasswordStrengthBar() {
+    final password = _passwordController.text;
+    final strength = _passwordStrength(password);
+    if (password.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: kSpaceS),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: strength.progress,
+                  backgroundColor: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(kRadiusM),
+                  valueColor: AlwaysStoppedAnimation<Color>(strength.color),
+                  minHeight: 2,
+                ),
+              ),
+              const SizedBox(width: kSpaceM),
+              Text(
+                strength.label,
+                style: TextStyle(
+                  fontSize: kFontSizeBodySmall,
+                  fontWeight: FontWeight.w600,
+                  color: strength.color,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: kSpaceXS),
+          Text(
+            'Au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.',
+            style: TextStyle(
+              fontSize: kFontSizeLabel,
+              color: Colors.grey.shade600,
+              height: 1.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmailValidationIndicator() {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) return const SizedBox.shrink();
+    final valid = _isEmailValid(email);
+    return Padding(
+      padding: const EdgeInsets.only(top: kSpaceS),
+      child: Row(
+        children: [
+          Icon(
+            valid ? FontAwesomeIcons.solidCircleCheck : FontAwesomeIcons.solidCircleXmark,
+            size: 16,
+            color: valid ? Colors.green.shade700 : Colors.red.shade700,
+          ),
+          const SizedBox(width: kSpaceS),
+          Text(
+            valid ? 'Email valide' : 'Email invalide',
+            style: TextStyle(
+              fontSize: kFontSizeBodySmall,
+              fontWeight: FontWeight.w600,
+              color: valid ? Colors.green.shade700 : Colors.red.shade700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConfirmMatchIndicator() {
+    final confirm = _confirmPasswordController.text;
+    final password = _passwordController.text;
+    if (confirm.isEmpty) return const SizedBox.shrink();
+    final match = password == confirm;
+    return Padding(
+      padding: const EdgeInsets.only(top: kSpaceS),
+      child: Row(
+        children: [
+          Icon(
+            match ? FontAwesomeIcons.solidCircleCheck : FontAwesomeIcons.solidCircleXmark,
+            size: 16,
+            color: match ? Colors.green.shade700 : Colors.red.shade700,
+          ),
+          const SizedBox(width: kSpaceS),
+          Text(
+            match ? 'Correspond' : 'Ne correspond pas',
+            style: TextStyle(
+              fontSize: kFontSizeBodySmall,
+              fontWeight: FontWeight.w600,
+              color: match ? Colors.green.shade700 : Colors.red.shade700,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _togglePasswordVisibility() {
@@ -190,6 +331,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         labelText: 'Adresse email',
                         keyboardType: TextInputType.emailAddress,
                       ),
+                      _buildEmailValidationIndicator(),
                       const SizedBox(height: kSpaceL),
 
                       // Téléphone
@@ -246,11 +388,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             _isPasswordVisible ? FontAwesomeIcons.solidEyeSlash : FontAwesomeIcons.solidEye,
-                            color: Colors.grey.shade500,
+                            color: jiSecondary,
                           ),
                           onPressed: _togglePasswordVisibility,
                         ),
                       ),
+                      _buildPasswordStrengthBar(),
                       const SizedBox(height: kSpaceL),
 
                       // Confirmation mot de passe
@@ -262,12 +405,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             _isPasswordVisible ? FontAwesomeIcons.solidEyeSlash : FontAwesomeIcons.solidEye,
-                            color: Colors.grey.shade500,
+                            color: jiSecondary,
                           ),
                           onPressed: _togglePasswordVisibility,
                         ),
                       ),
-                      
+                      _buildConfirmMatchIndicator(),
                       const SizedBox(height: kSpaceXXL),
 
                       // Bouton Inscription
@@ -275,12 +418,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: kButtonHeightPrimary,
                         child: ElevatedButton(
                           onPressed: () {
+                            final email = _emailController.text.trim();
                             final password = _passwordController.text.trim();
                             final confirm = _confirmPasswordController.text.trim();
+                            final strength = _passwordStrength(password);
+                            if (!_isEmailValid(email)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                    'Veuillez entrer une adresse email valide.',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.red.shade700,
+                                  behavior: SnackBarBehavior.floating,
+                                ),
+                              );
+                              return;
+                            }
+                            if (strength.label != 'Fort') {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: const Text(
+                                    'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  backgroundColor: Colors.red.shade700,
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: const Duration(seconds: 4),
+                                ),
+                              );
+                              return;
+                            }
                             if (password != confirm) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: const Text('Les mots de passe ne correspondent pas.'),
+                                  content: const Text('Les mots de passe ne correspondent pas.', style: TextStyle(color: Colors.white)),
                                   backgroundColor: Colors.red.shade700,
                                   behavior: SnackBarBehavior.floating,
                                 ),
@@ -411,4 +583,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
+}
+
+class _PasswordStrength {
+  const _PasswordStrength({required this.label, required this.progress, required this.color});
+  final String label;
+  final double progress;
+  final Color color;
 }

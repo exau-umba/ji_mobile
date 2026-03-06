@@ -131,7 +131,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: const Text('Un lien de réinitialisation a été envoyé à cette adresse.'),
+                                    content: const Text('Un lien de réinitialisation a été envoyé à cette adresse.', style: TextStyle(color: Colors.white)),
                                     backgroundColor: colorScheme.secondary,
                                     behavior: SnackBarBehavior.floating,
                                   ),
