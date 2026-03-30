@@ -10,6 +10,7 @@ import '../../features/annonces/presentation/screens/annonces_list_screen.dart';
 import '../../features/annonces/presentation/screens/annonce_detail_screen.dart';
 import '../../features/annonces/presentation/screens/annonce_comments_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/profile/presentation/screens/qr_badge_screen.dart';
 import '../widgets/main_shell.dart';
 
 /// Router principal de l'application mobile.
@@ -76,6 +77,11 @@ final appRouter = GoRouter(
           path: '/profile',
           name: 'profile',
           builder: (context, state) => const ProfileScreen(),
+        ),
+        GoRoute(
+          path: '/profile/qr-badge',
+          name: 'profile-qr-badge',
+          builder: (context, state) => const QrBadgeScreen(),
         ),
       ],
     ),
