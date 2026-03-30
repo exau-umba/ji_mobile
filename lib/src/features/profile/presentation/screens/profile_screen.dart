@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_design.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -9,73 +10,89 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: AppInsets.screen.copyWith(top: kSpaceL),
+    return Stack(
       children: [
-        Center(
-          child: Column(
-            children: [
-              const CircleAvatar(
-                radius: 44,
-                backgroundColor: jiSecondaryLight,
-                child: FaIcon(
-                  FontAwesomeIcons.user,
-                  color: jiPrimary,
-                  size: 30,
-                ),
-              ),
-              const SizedBox(height: kSpaceM),
-              Text(
-                'Exaucé Umba',
-                style: AppTextStyles.titleLarge.copyWith(color: jiPrimary),
-              ),
-              const SizedBox(height: kSpaceXS),
-              Text(
-                'Étudiant · Université de Kinshasa',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: Colors.grey.shade600,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: kSpaceXL),
-        _ProfileTile(
-          icon: FontAwesomeIcons.userPen,
-          title: 'Modifier mon profil',
-          onTap: () {},
-        ),
-        _ProfileTile(
-          icon: FontAwesomeIcons.qrcode,
-          title: 'Mon badge QR',
-          onTap: () {},
-        ),
-        _ProfileTile(
-          icon: FontAwesomeIcons.bell,
-          title: 'Notifications',
-          onTap: () {},
-        ),
-        _ProfileTile(
-          icon: FontAwesomeIcons.gear,
-          title: 'Paramètres',
-          onTap: () {},
-        ),
-        const SizedBox(height: kSpaceL),
-        OutlinedButton.icon(
-          onPressed: () {},
-          icon: const FaIcon(
-            FontAwesomeIcons.rightFromBracket,
-            size: 16,
-            color: Colors.red,
-          ),
-          label: const Text('Se déconnecter'),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: Colors.red,
-            side: BorderSide(color: Colors.red.shade200),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(kRadiusL),
+        Positioned.fill(
+          child: Opacity(
+            opacity: 0.08,
+            child: Image.asset(
+              'assets/icon/JI_MINI_LOGO.png',
+              fit: BoxFit.cover,
             ),
           ),
+        ),
+        Positioned.fill(
+          child: Container(color: Colors.white.withOpacity(0.92)),
+        ),
+        ListView(
+          padding: AppInsets.screen.copyWith(top: kSpaceL),
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  const CircleAvatar(
+                    radius: 44,
+                    backgroundColor: jiSecondaryLight,
+                    child: FaIcon(
+                      FontAwesomeIcons.user,
+                      color: jiPrimary,
+                      size: 30,
+                    ),
+                  ),
+                  const SizedBox(height: kSpaceM),
+                  Text(
+                    'Exaucé Umba',
+                    style: AppTextStyles.titleLarge.copyWith(color: jiPrimary),
+                  ),
+                  const SizedBox(height: kSpaceXS),
+                  Text(
+                    'Étudiant · Université de Kinshasa',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: kSpaceXL),
+            _ProfileTile(
+              icon: FontAwesomeIcons.userPen,
+              title: 'Modifier mon profil',
+              onTap: () {},
+            ),
+            _ProfileTile(
+              icon: FontAwesomeIcons.qrcode,
+              title: 'Mon badge QR',
+              onTap: () => context.pushNamed('profile-qr-badge'),
+            ),
+            _ProfileTile(
+              icon: FontAwesomeIcons.bell,
+              title: 'Notifications',
+              onTap: () {},
+            ),
+            _ProfileTile(
+              icon: FontAwesomeIcons.gear,
+              title: 'Paramètres',
+              onTap: () {},
+            ),
+            const SizedBox(height: kSpaceL),
+            OutlinedButton.icon(
+              onPressed: () {},
+              icon: const FaIcon(
+                FontAwesomeIcons.rightFromBracket,
+                size: 16,
+                color: Colors.red,
+              ),
+              label: const Text('Se déconnecter'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.red,
+                side: BorderSide(color: Colors.red.shade200),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(kRadiusL),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

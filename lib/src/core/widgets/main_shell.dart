@@ -39,6 +39,7 @@ class MainShell extends StatelessWidget {
       }
       return 'Commentaires';
     }
+    if (uri.path.startsWith('/profile/qr-badge')) return 'Mon badge QR';
     if (uri.path.startsWith('/annonces')) return 'Annonces';
     if (uri.path.startsWith('/profile')) return 'Profil';
     return 'Journées Informatiques';
