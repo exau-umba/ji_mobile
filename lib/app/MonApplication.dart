@@ -16,6 +16,7 @@ class MonApplication extends StatelessWidget {
       title: 'JI 2026',
       debugShowCheckedModeBanner: false,
       theme: buildJiTheme(Brightness.light),
+      themeMode: ThemeMode.light,
       darkTheme: buildJiTheme(Brightness.dark),
       routerConfig: router,
     );

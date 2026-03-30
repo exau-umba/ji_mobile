@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/app_design.dart';
@@ -50,44 +49,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: false,
-        titleSpacing: 0,
-        title: const Text('Journées Informatiques', style: TextStyle(color: jiPrimary, fontWeight: FontWeight.w600, fontSize: kFontSizeTitleMedium)),
-        leading: Padding(
-          padding: const EdgeInsets.all(kSpaceS),
-          child: Image.asset(
-            'assets/icon/JI_MINI_LOGO.png',
-            height: kLogoHeightAppBar,
-            fit: BoxFit.contain,
-          ),
-        ),
-        leadingWidth: kLogoHeightAppBar + (kSpaceS * 2),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Badge(label: Text('5'), child: Icon(FontAwesomeIcons.bell, color: jiPrimary, size: kIconSizeMedium,)),),
-        ],
-      ),
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Banner : slides (carousel) 16/9
-            LayoutBuilder(
-              builder: (context, constraints) {
-                final width = constraints.maxWidth - (kScreenPaddingHorizontal * 2);
-                final height = width * 5 / 9 ;
-                return SizedBox(
-                  height: height,
-                  child: Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Banner : slides (carousel) 16/9
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final width =
+                constraints.maxWidth - (kScreenPaddingHorizontal * 2);
+            final height = width * 5 / 9;
+            return SizedBox(
+              height: height,
+              child: Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
                   PageView.builder(
                     controller: _bannerController,
-                    onPageChanged: (index) => setState(() => _currentBannerIndex = index),
+                    onPageChanged: (index) =>
+                        setState(() => _currentBannerIndex = index),
                     itemCount: _bannerSlides.length,
                     physics: const BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
@@ -108,7 +87,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ),
                               ),
                               child: const Center(
-                                child: Icon(Icons.image_not_supported_outlined, color: Colors.white54, size: 48),
+                                child: Icon(
+                                  Icons.image_not_supported_outlined,
+                                  color: Colors.white54,
+                                  size: 48,
+                                ),
                               ),
                             ),
                           ),
@@ -123,10 +106,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: List.generate(
                         _bannerSlides.length,
                         (index) => AnimatedContainer(
-                          duration: const Duration(milliseconds: kDurationShort),
-                          margin: const EdgeInsets.symmetric(horizontal: kSpaceXS),
+                          duration:
+                              const Duration(milliseconds: kDurationShort),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: kSpaceXS),
                           height: kIndicatorSize,
-                          width: _currentBannerIndex == index ? kIndicatorSizeActive : kIndicatorSize,
+                          width: _currentBannerIndex == index
+                              ? kIndicatorSizeActive
+                              : kIndicatorSize,
                           decoration: BoxDecoration(
                             color: _currentBannerIndex == index
                                 ? Colors.white
@@ -139,32 +126,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-                );
-              },
-            ),
-            // Contenu vide en dessous (plus de cartes ni grille)
-            const Expanded(child: SizedBox.shrink()),
-          ],
+            );
+          },
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        onTap: (_) {},
-        items: const [
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.house, size: 20),
-            label: 'Accueil',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.calendarDays, size: 20),
-            label: 'Agenda',
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.user, size: 20),
-            label: 'Profil',
-          ),
-        ],
-      ),
+        // Contenu vide en dessous (plus de cartes ni grille)
+        const Expanded(child: SizedBox.shrink()),
+      ],
     );
   }
 }
