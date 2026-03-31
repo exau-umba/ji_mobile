@@ -14,7 +14,7 @@ class ProfileScreen extends StatelessWidget {
       children: [
         Positioned.fill(
           child: Opacity(
-            opacity: 0.08,
+            opacity: 0.8,
             child: Image.asset(
               'assets/icon/JI_MINI_LOGO.png',
               fit: BoxFit.cover,
@@ -58,7 +58,7 @@ class ProfileScreen extends StatelessWidget {
             _ProfileTile(
               icon: FontAwesomeIcons.userPen,
               title: 'Modifier mon profil',
-              onTap: () {},
+              onTap: () => context.pushNamed('profile-edit'),
             ),
             _ProfileTile(
               icon: FontAwesomeIcons.qrcode,
@@ -73,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
             _ProfileTile(
               icon: FontAwesomeIcons.gear,
               title: 'Paramètres',
-              onTap: () {},
+              onTap: () => context.pushNamed('settings'),
             ),
             const SizedBox(height: kSpaceL),
             OutlinedButton.icon(
