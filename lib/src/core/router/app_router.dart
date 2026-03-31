@@ -10,8 +10,12 @@ import '../../features/annonces/presentation/screens/annonces_list_screen.dart';
 import '../../features/annonces/presentation/screens/annonce_detail_screen.dart';
 import '../../features/annonces/presentation/screens/annonce_comments_screen.dart';
 import '../../features/notifications/presentation/screens/notifications_screen.dart';
+import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/screens/qr_badge_screen.dart';
+import '../../features/settings/presentation/screens/about_screen.dart';
+import '../../features/settings/presentation/screens/change_password_screen.dart';
+import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../widgets/main_shell.dart';
 
 /// Router principal de l'application mobile.
@@ -85,9 +89,29 @@ final appRouter = GoRouter(
           builder: (context, state) => const QrBadgeScreen(),
         ),
         GoRoute(
+          path: '/profile/edit',
+          name: 'profile-edit',
+          builder: (context, state) => const EditProfileScreen(),
+        ),
+        GoRoute(
           path: '/notifications',
           name: 'notifications',
           builder: (context, state) => const NotificationsScreen(),
+        ),
+        GoRoute(
+          path: '/settings',
+          name: 'settings',
+          builder: (context, state) => const SettingsScreen(),
+        ),
+        GoRoute(
+          path: '/settings/about',
+          name: 'settings-about',
+          builder: (context, state) => const AboutScreen(),
+        ),
+        GoRoute(
+          path: '/settings/change-password',
+          name: 'settings-change-password',
+          builder: (context, state) => const ChangePasswordScreen(),
         ),
       ],
     ),

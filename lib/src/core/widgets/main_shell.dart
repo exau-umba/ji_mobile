@@ -39,6 +39,12 @@ class MainShell extends StatelessWidget {
       }
       return 'Commentaires';
     }
+    if (uri.path.startsWith('/settings/change-password')) {
+      return 'Changer le mot de passe';
+    }
+    if (uri.path.startsWith('/settings/about')) return 'À propos';
+    if (uri.path.startsWith('/profile/edit')) return 'Modifier mon profil';
+    if (uri.path.startsWith('/settings')) return 'Paramètres';
     if (uri.path.startsWith('/notifications')) return 'Notifications';
     if (uri.path.startsWith('/profile/qr-badge')) return 'Mon badge QR';
     if (uri.path.startsWith('/annonces')) return 'Annonces';
