@@ -10,23 +10,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return ListView(
+      padding: AppInsets.screen.copyWith(top: kSpaceL),
       children: [
-        Positioned.fill(
-          child: Opacity(
-            opacity: 0.8,
-            child: Image.asset(
-              'assets/icon/JI_MINI_LOGO.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        Positioned.fill(
-          child: Container(color: Colors.white.withOpacity(0.92)),
-        ),
-        ListView(
-          padding: AppInsets.screen.copyWith(top: kSpaceL),
-          children: [
             Center(
               child: Column(
                 children: [
@@ -92,8 +78,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        ),
       ],
     );
   }

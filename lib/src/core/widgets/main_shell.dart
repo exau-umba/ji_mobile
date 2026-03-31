@@ -22,6 +22,7 @@ class MainShell extends StatelessWidget {
 
   int _indexFromLocation(String location) {
     final path = Uri.parse(location).path;
+    if (path.startsWith('/agenda')) return 1;
     if (path.startsWith('/annonces')) return 2;
     if (path.startsWith('/profile')) return 3;
     // TODO: quand l'agenda et le profil auront leurs routes dédiées
@@ -47,6 +48,7 @@ class MainShell extends StatelessWidget {
     if (uri.path.startsWith('/settings')) return 'Paramètres';
     if (uri.path.startsWith('/notifications')) return 'Notifications';
     if (uri.path.startsWith('/profile/qr-badge')) return 'Mon badge QR';
+    if (uri.path.startsWith('/agenda')) return 'Agenda';
     if (uri.path.startsWith('/annonces')) return 'Annonces';
     if (uri.path.startsWith('/profile')) return 'Profil';
     return 'Journées Informatiques';
@@ -58,7 +60,7 @@ class MainShell extends StatelessWidget {
         context.goNamed('dashboard');
         break;
       case 1:
-        // TODO: route agenda quand elle sera prête
+        context.goNamed('agenda');
         break;
       case 2:
         context.goNamed('annonces');
@@ -106,7 +108,23 @@ class MainShell extends StatelessWidget {
           ),
         ],
       ),
-      body: SafeArea(child: child),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.8,
+              child: Image.asset(
+                'assets/icon/JI_MINI_LOGO.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: Container(color: Colors.white.withOpacity(0.92)),
+          ),
+          SafeArea(child: child),
+        ],
+      ),
       bottomNavigationBar: JiBottomNavigationBar(
         currentIndex: currentIndex,
         notificationCount: notificationCount,
@@ -120,6 +138,7 @@ Widget _buildLeading(BuildContext context, String location) {
   final path = Uri.parse(location).path;
   final isRoot =
       path == '/dashboard' ||
+      path == '/agenda' ||
       path == '/annonces' ||
       path == '/profile' ||
       path == '/';
