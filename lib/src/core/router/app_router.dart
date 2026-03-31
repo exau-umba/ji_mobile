@@ -5,6 +5,7 @@ import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
+import '../../features/agenda/presentation/screens/agenda_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/annonces/presentation/screens/annonces_list_screen.dart';
 import '../../features/annonces/presentation/screens/annonce_detail_screen.dart';
@@ -56,6 +57,11 @@ final appRouter = GoRouter(
           path: '/dashboard',
           name: 'dashboard',
           builder: (context, state) => const DashboardScreen(),
+        ),
+        GoRoute(
+          path: '/agenda',
+          name: 'agenda',
+          builder: (context, state) => const AgendaScreen(),
         ),
         GoRoute(
           path: '/annonces',
