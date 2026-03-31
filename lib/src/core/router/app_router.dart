@@ -9,6 +9,7 @@ import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/annonces/presentation/screens/annonces_list_screen.dart';
 import '../../features/annonces/presentation/screens/annonce_detail_screen.dart';
 import '../../features/annonces/presentation/screens/annonce_comments_screen.dart';
+import '../../features/notifications/presentation/screens/notifications_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/screens/qr_badge_screen.dart';
 import '../widgets/main_shell.dart';
@@ -82,6 +83,11 @@ final appRouter = GoRouter(
           path: '/profile/qr-badge',
           name: 'profile-qr-badge',
           builder: (context, state) => const QrBadgeScreen(),
+        ),
+        GoRoute(
+          path: '/notifications',
+          name: 'notifications',
+          builder: (context, state) => const NotificationsScreen(),
         ),
       ],
     ),

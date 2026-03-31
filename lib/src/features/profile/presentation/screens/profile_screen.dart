@@ -68,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
             _ProfileTile(
               icon: FontAwesomeIcons.bell,
               title: 'Notifications',
-              onTap: () {},
+              onTap: () => context.pushNamed('notifications'),
             ),
             _ProfileTile(
               icon: FontAwesomeIcons.gear,
