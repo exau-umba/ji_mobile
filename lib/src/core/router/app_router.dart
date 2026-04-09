@@ -5,7 +5,19 @@ import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 import '../../features/auth/presentation/screens/forgot_password_screen.dart';
+import '../../features/agenda/presentation/screens/agenda_screen.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../../features/annonces/presentation/screens/annonces_list_screen.dart';
+import '../../features/annonces/presentation/screens/annonce_detail_screen.dart';
+import '../../features/annonces/presentation/screens/annonce_comments_screen.dart';
+import '../../features/notifications/presentation/screens/notifications_screen.dart';
+import '../../features/profile/presentation/screens/edit_profile_screen.dart';
+import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/profile/presentation/screens/qr_badge_screen.dart';
+import '../../features/settings/presentation/screens/about_screen.dart';
+import '../../features/settings/presentation/screens/change_password_screen.dart';
+import '../../features/settings/presentation/screens/settings_screen.dart';
+import '../widgets/main_shell.dart';
 
 /// Router principal de l'application mobile.
 /// Splash → Onboarding → Login/Register → Dashboard
@@ -37,10 +49,77 @@ final appRouter = GoRouter(
       name: 'forgot-password',
       builder: (context, state) => const ForgotPasswordScreen(),
     ),
-    GoRoute(
-      path: '/dashboard',
-      name: 'dashboard',
-      builder: (context, state) => const DashboardScreen(),
+    ShellRoute(
+      builder: (context, state, child) =>
+          MainShell(child: child, location: state.uri.toString()),
+      routes: [
+        GoRoute(
+          path: '/dashboard',
+          name: 'dashboard',
+          builder: (context, state) => const DashboardScreen(),
+        ),
+        GoRoute(
+          path: '/agenda',
+          name: 'agenda',
+          builder: (context, state) => const AgendaScreen(),
+        ),
+        GoRoute(
+          path: '/annonces',
+          name: 'annonces',
+          builder: (context, state) => const AnnoncesListScreen(),
+        ),
+        GoRoute(
+          path: '/annonces/:id',
+          name: 'annonce-detail',
+          builder: (context, state) {
+            final id = state.pathParameters['id'] ?? '';
+            return AnnonceDetailScreen(annonceId: id);
+          },
+        ),
+        GoRoute(
+          path: '/annonces/:id/comments',
+          name: 'annonce-comments',
+          builder: (context, state) {
+            final id = state.pathParameters['id'] ?? '';
+            return AnnonceCommentsScreen(annonceId: id);
+          },
+        ),
+        GoRoute(
+          path: '/profile',
+          name: 'profile',
+          builder: (context, state) => const ProfileScreen(),
+        ),
+        GoRoute(
+          path: '/profile/qr-badge',
+          name: 'profile-qr-badge',
+          builder: (context, state) => const QrBadgeScreen(),
+        ),
+        GoRoute(
+          path: '/profile/edit',
+          name: 'profile-edit',
+          builder: (context, state) => const EditProfileScreen(),
+        ),
+        GoRoute(
+          path: '/notifications',
+          name: 'notifications',
+          builder: (context, state) => const NotificationsScreen(),
+        ),
+        GoRoute(
+          path: '/settings',
+          name: 'settings',
+          builder: (context, state) => const SettingsScreen(),
+        ),
+        GoRoute(
+          path: '/settings/about',
+          name: 'settings-about',
+          builder: (context, state) => const AboutScreen(),
+        ),
+        GoRoute(
+          path: '/settings/change-password',
+          name: 'settings-change-password',
+          builder: (context, state) => const ChangePasswordScreen(),
+        ),
+      ],
     ),
   ],
 );

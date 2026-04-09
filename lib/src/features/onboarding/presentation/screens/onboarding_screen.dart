@@ -88,7 +88,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      // backgroundColor: theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           // Fond animé Lottie (boucle infinie) en arrière-plan total
@@ -117,8 +117,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    jiPrimary.withOpacity(0.95),
-                    jiPrimaryLight.withOpacity(0.9),
+                    jiSecondaryLight,
+                    jiSecondaryLight,
+                    // Colors.white10,
+                    // Colors.white10,
+                    // jiSecondary.withOpacity(0.95),
+                    // jiSecondary.withOpacity(0.9),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -136,9 +140,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                   alignment: Alignment.topRight,
                   child: TextButton(
                     onPressed: _skip,
-                    child: const Text(
+                    child: Text(
                       'Passer',
-                      style: TextStyle(color: Colors.white70),
+                      style: TextStyle(color: colorScheme.primary),
                     ),
                   ),
                 ),
@@ -168,13 +172,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
                                 Text(
                                   page.title,
                                   textAlign: TextAlign.start,
-                                  style: AppTextStyles.displayLarge.copyWith(color: Colors.white),
+                                  style: AppTextStyles.displayLarge.copyWith(color: colorScheme.primary),
                                 ),
                                 const SizedBox(height: kSpaceL),
                                 Text(
                                   page.description,
                                   textAlign: TextAlign.start,
-                                  style: AppTextStyles.bodyMedium.copyWith(color: Colors.white70),
+                                  style: AppTextStyles.bodyMedium.copyWith(color: colorScheme.primary),
                                 ),
                                 const SizedBox(height: kSpaceL),
                               ],
@@ -208,7 +212,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with TickerProvider
           decoration: BoxDecoration(
             color: _currentIndex == index
                 ? colorScheme.secondary
-                : Colors.white30,
+                : colorScheme.primary,
             borderRadius: BorderRadius.circular(kRadiusM),
           ),
         ),

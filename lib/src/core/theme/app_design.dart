@@ -27,6 +27,46 @@ const double kSpaceL = 16;
 const double kSpaceXL = 24;
 const double kSpaceXXL = 32;
 
+// ——— Marges et padding écran (à respecter dans toute l'app) ———
+/// Padding horizontal standard des écrans (contenu principal).
+const double kScreenPaddingHorizontal = kSpaceXL; // 24
+/// Padding vertical standard des écrans.
+const double kScreenPaddingVertical = kSpaceL; // 16
+/// Marge entre sections ou blocs sur un même écran.
+const double kScreenMargin = kSpaceL; // 16
+/// Padding global d'un écran (horizontal + vertical).
+const EdgeInsets kScreenPadding = EdgeInsets.symmetric(
+  horizontal: kScreenPaddingHorizontal,
+  vertical: kScreenPaddingVertical,
+);
+/// Padding horizontal seul (pour barres, listes, formulaires).
+const EdgeInsets kScreenPaddingHorizontalOnly = EdgeInsets.symmetric(
+  horizontal: kScreenPaddingHorizontal,
+);
+
+/// Insets standard de l'app. Utiliser partout pour marges et padding.
+class AppInsets {
+  AppInsets._();
+
+  /// Padding complet écran (horizontal 24, vertical 16).
+  static const EdgeInsets screen = kScreenPadding;
+
+  /// Horizontal seul (24).
+  static const EdgeInsets horizontal = EdgeInsets.symmetric(horizontal: kScreenPaddingHorizontal);
+
+  /// Vertical seul (16).
+  static const EdgeInsets vertical = EdgeInsets.symmetric(vertical: kScreenPaddingVertical);
+
+  /// Petit (8).
+  static const EdgeInsets allS = EdgeInsets.all(kSpaceS);
+
+  /// Moyen (16).
+  static const EdgeInsets allM = EdgeInsets.all(kSpaceL);
+
+  /// Grand (24).
+  static const EdgeInsets allL = EdgeInsets.all(kSpaceXL);
+}
+
 // ——— Rayons de bordure ———
 const double kRadiusS = 10;
 const double kRadiusM = 16;
@@ -39,8 +79,10 @@ const double kButtonHeightPrimary = 56;
 const double kIndicatorSize = 8;
 const double kIndicatorSizeActive = 24;
 const double kLogoHeightHeader = 60;
+const double kLogoHeightAppBar = 32;
 const double kLogoSplashWidth = 100;
 const double kIconSizeMedium = 20;
+const double kIconSizeSmall = 16;
 const double kIconSizeLarge = 80;
 
 // ——— Durées d'animation (millisecondes) ———
